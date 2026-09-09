@@ -27,8 +27,17 @@ Panel {
     var metadata = candidate.metadata || {}
     var url = String(metadata["xesam:url"] || "").toLowerCase()
     var identity = String(candidate.identity || "").toLowerCase()
-    if (identity.indexOf("youtube music") !== -1) return true
+    // Native clients and webapps may identify as "YouTube", "YouTube Music",
+    // "youtube-music", etc. Match any YouTube identity, not just Music.
+    if (identity.indexOf("youtube") !== -1) return true
     if (url.indexOf("music.youtube.com") !== -1) return true
+    // The youtube.com webapp (omarchy-launch-webapp https://youtube.com/)
+    // plays music through regular watch URLs, which the old check ignored.
+    // Brave/Firefox/Zen expose the page URL via xesam:url, so match the
+    // YouTube domains here. Chrome exposes no xesam:url at all (see below).
+    if (url.indexOf("youtube.com") !== -1) return true
+    if (url.indexOf("youtu.be") !== -1) return true
+    if (url.indexOf("youtube-nocookie.com") !== -1) return true
     // Chrome identifies only as "Chrome" and publishes no xesam:url at all, so
     // neither check above can ever fire for it. Of the keys Chrome does
     // publish, xesam:album is the discriminator: YouTube Music populates it,

@@ -15,9 +15,12 @@ album art, artist, album, progress, and playback controls in a popup panel.
 
 The plugin does not start a background service, use browser automation, or
 store account data. It activates when MPRIS identifies YouTube Music, reports a
-`music.youtube.com` URL, or -- for browsers that expose neither, such as Google
+YouTube URL (`music.youtube.com`, `youtube.com`, `youtu.be`,
+`youtube-nocookie.com`), or -- for browsers that expose neither, such as Google
 Chrome -- when a browser player reports a non-empty `xesam:album`, which
-YouTube Music sets and regular videos leave empty.
+YouTube Music sets and regular videos leave empty. Note: Chrome publishes no
+page URL, so regular `youtube.com` videos in Chrome are still ignored, while
+Brave, Firefox, and Zen detect them via the URL.
 
 ## Install
 
