@@ -32,17 +32,28 @@ Panel {
     if (identity.indexOf("youtube") !== -1) return true
     if (url.indexOf("music.youtube.com") !== -1) return true
     // The youtube.com webapp (omarchy-launch-webapp https://youtube.com/)
-    // plays music through regular watch URLs, which the old check ignored.
-    // Brave/Firefox/Zen expose the page URL via xesam:url, so match the
-    // YouTube domains here. Chrome exposes no xesam:url at all (see below).
+    // plays music through regular watch URLs. Firefox/Zen expose the page
+    // URL via xesam:url, so match the YouTube domains here for them.
     if (url.indexOf("youtube.com") !== -1) return true
     if (url.indexOf("youtu.be") !== -1) return true
     if (url.indexOf("youtube-nocookie.com") !== -1) return true
-    // Chrome identifies only as "Chrome" and publishes no xesam:url at all, so
-    // neither check above can ever fire for it. Of the keys Chrome does
-    // publish, xesam:album is the discriminator: YouTube Music populates it,
-    // while a regular YouTube video publishes it as an empty string. This is
-    // much narrower than matching any playing browser.
+    // Brave/Chrome/Chromium publish no xesam:url at all (verified live on
+    // Brave 152: Identity "Brave", Playing, title/artist set, album
+    // sometimes empty, no URL key), so the URL checks above can never fire
+    // for them -- and a regular youtube.com video publishes an empty
+    // xesam:album, so the album check below can't catch the youtube.com
+    // webapp either. MPRIS cannot tell which site a Chromium-family player
+    // is playing, so fall back to any playing Chromium-family player. This
+    // may also match non-YouTube media in those browsers, but it is the
+    // only signal available.
+    if (candidate.isPlaying
+        && (identity.indexOf("chrome") !== -1
+          || identity.indexOf("chromium") !== -1
+          || identity.indexOf("brave") !== -1)) return true
+    // Chrome identifies only as "Chrome" and publishes no xesam:url at all.
+    // Of the keys it does publish, xesam:album discriminates YouTube Music
+    // (populated) from a regular YouTube video (empty string). This keeps a
+    // paused YouTube Music player selected while it is retained.
     return isBrowser(candidate) && String(metadata["xesam:album"] || "") !== ""
   }
 

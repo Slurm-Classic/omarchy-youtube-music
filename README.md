@@ -14,13 +14,13 @@ album art, artist, album, progress, and playback controls in a popup panel.
 - A browser that exposes the current media tab through MPRIS
 
 The plugin does not start a background service, use browser automation, or
-store account data. It activates when MPRIS identifies YouTube Music, reports a
-YouTube URL (`music.youtube.com`, `youtube.com`, `youtu.be`,
-`youtube-nocookie.com`), or -- for browsers that expose neither, such as Google
-Chrome -- when a browser player reports a non-empty `xesam:album`, which
-YouTube Music sets and regular videos leave empty. Note: Chrome publishes no
-page URL, so regular `youtube.com` videos in Chrome are still ignored, while
-Brave, Firefox, and Zen detect them via the URL.
+store account data. It activates when MPRIS identifies a YouTube player,
+reports a YouTube URL (`music.youtube.com`, `youtube.com`, `youtu.be`,
+`youtube-nocookie.com`), or -- for Brave, Chrome, and Chromium, which publish
+no page URL at all -- when such a browser player is playing. MPRIS cannot tell
+which site a Chromium-family player is playing, so any playing media in those
+browsers is shown; Firefox and Zen are scoped to YouTube URLs instead. A
+non-empty `xesam:album` keeps a paused YouTube Music player selected.
 
 ## Install
 
